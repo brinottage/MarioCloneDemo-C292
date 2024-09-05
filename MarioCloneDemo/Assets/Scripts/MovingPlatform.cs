@@ -2,22 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-   [SerializeField] float moveSpeed; // SF allows to edit stuff from inside the editor
 
-    private Rigidbody2D rb;
+    [SerializeField] float speed;
+    private float startLocation;
+    private float endLocation;
 
-    private Boolean right;
+    [SerializeField] float distance;
+    private Vector3 direction = Vector3.up;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // our rb is the rigidbody the object is attached to
+        startLocation = transform.position.y;
 
-        right = true;
+        endLocation = transform.position.y + distance;
+
     }
 
     // Update is called once per frame
@@ -31,17 +35,16 @@ public class MovingPlatform : MonoBehaviour
     private void BackForth()
     {
 
-        // Moves Right
-          // moveInput decides direction, moveSpeed decides speed, the Vector is (1, 0)
-        if (right) {
-            transform.Translate(1 * Vector2.right * moveSpeed * Time.deltaTime);
-        }
+        // Moves platform in accordance to direction variable
+       transform.Translate(direction * speed * Time.deltaTime);
 
-        // Moves Left
-          // moveInput decides direction, moveSpeed decides speed, the Vector is (1, 0)
-        if (!right) {
-             transform.Translate(1 * Vector2.right * moveSpeed * Time.deltaTime);
-        }
+       if (transform.position.y >= endLocation){
+            direction = Vector3.down;
+       } else if (transform.position.y <= startLocation){
+            direction = Vector3.up;
+       }
+
+    
 
     }
 
